@@ -3,509 +3,497 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test o Cząsteczkach</title>
+    <title>Fizyka Atomowa Dla Uczniów Klas 7</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; color: #333; }
+        h1 { text-align: center; color: #28a745; font-size: 2.5em; margin-bottom: 20px; }
         .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #4a4a4a; }
-        .progress { text-align: center; margin-bottom: 20px; font-weight: bold; color: #007bff; }
-        .question { background: #f9f9f9; padding: 20px; margin-bottom: 20px; border-radius: 8px; border-left: 4px solid #007bff; }
-        .question h3 { color: #333; margin-bottom: 15px; }
-        .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin-top: 15px; }
-        .option { background: #e7f3ff; border: 2px solid #007bff; padding: 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s; text-align: center; }
-        .option:hover { background: #d4edda; border-color: #28a745; }
-        .option.correct { background: #d4edda; border-color: #28a745; }
-        .option.incorrect { background: #f8d7da; border-color: #dc3545; }
-        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; display: block; margin: 10px auto 0; }
-        button:hover { background: #0056b3; }
-        .feedback { margin-top: 10px; padding: 10px; border-radius: 4px; display: none; text-align: center; font-weight: bold; }
-        .correct-feedback { background: #d4edda; color: #155724; }
-        .incorrect-feedback { background: #f8d7da; color: #721c24; }
-        #resultsBtn { background: #28a745; margin-top: 20px; }
-        #resultsBtn:hover { background: #218838; }
+        .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .tile { background: #e9ecef; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.3s ease; }
+        .tile:hover { background: #007bff; color: white; transform: scale(1.05); }
+        .content { display: none; padding: 15px; background: #f8f9fa; border-radius: 8px; margin-top: 10px; animation: fadeIn 0.5s ease forwards; }
+        .schema { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+        .schema-item { background: #dee2e6; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
+        .schema-item:hover { background: #28a745; color: white; transform: scale(1.05); }
+        .schema-desc { display: none; padding: 10px; background: #f1f3f5; border-radius: 8px; margin-top: 5px; animation: fadeIn 0.5s ease forwards; }
+        .atom-schema { text-align: center; margin: 50px auto 20px; position: relative; }
+        .atom-schema .nucleus { width: 40px; height: 40px; background: #ff4500; border: 2px solid #ffd700; border-radius: 50%; display: inline-block; position: relative; animation: pulse 1.5s infinite; z-index: 1; }
+        .atom-schema .nucleus .proton { width: 10px; height: 10px; background: #ff1493; border-radius: 50%; position: absolute; }
+        .atom-schema .nucleus .proton:nth-child(1) { top: 5px; left: 5px; }
+        .atom-schema .nucleus .proton:nth-child(2) { bottom: 5px; right: 5px; }
+        .atom-schema .nucleus .proton:nth-child(3) { top: 5px; right: 5px; }
+        .atom-schema .nucleus .neutron { width: 10px; height: 10px; background: #00ced1; border-radius: 50%; position: absolute; }
+        .atom-schema .nucleus .neutron:nth-child(1) { top: 5px; left: 15px; }
+        .atom-schema .nucleus .neutron:nth-child(2) { bottom: 5px; right: 15px; }
+        .atom-schema .nucleus .neutron:nth-child(3) { bottom: 5px; left: 15px; }
+        .atom-schema .electron-ring { width: 140px; height: 140px; border: 2px dashed #4682b4; border-radius: 50%; position: absolute; top: -50px; left: 50%; transform: translateX(-50%); animation: rotate 4s linear infinite; z-index: 0; }
+        .atom-schema .electron { width: 12px; height: 12px; background: #32cd32; border-radius: 50%; position: absolute; animation: orbit 2s linear infinite; }
+        .atom-schema .electron:nth-child(2) { animation-delay: -1s; }
+        .atom-schema .arrow {
+            position: absolute;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            opacity: 0;
+            background-color: rgba(255, 255, 255, 0.8); /* Lekkie tło dla lepszej czytelności */
+            padding: 5px;
+            border-radius: 4px;
+        }
+        .atom-schema .arrow-1 {
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: fadeInArrow 0.5s ease 0s forwards;
+        } /* Jądro - nad górą, centrowane */
+        .atom-schema .arrow-2 {
+            top: 70px;
+            left: 20%;
+            animation: fadeInArrow 0.5s ease 0.5s forwards;
+        } /* Protony - lewa strona, niżej */
+        .atom-schema .arrow-3 {
+            top: 70px;
+            right: 20%;
+            animation: fadeInArrow 0.5s ease 1s forwards;
+        } /* Neutrony - prawa strona, niżej */
+        .atom-schema .arrow-4 {
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: fadeInArrow 0.5s ease 1.5s forwards;
+        } /* Elektrony - pod spodem, centrowane */
+        .water-schema { text-align: center; margin: 20px auto; position: relative; }
+        .water-schema .atom-h { width: 20px; height: 20px; background: #ff1493; border-radius: 50%; display: inline-block; margin: 0 10px; }
+        .water-schema .atom-o { width: 30px; height: 30px; background: #ff4500; border-radius: 50%; display: inline-block; }
+        .water-schema .bond { width: 30px; height: 2px; background: #4682b4; position: absolute; top: 50%; transform: translateY(-50%); }
+        .water-schema .bond-1 { left: 25px; }
+        .water-schema .bond-2 { right: 25px; }
+        .hydrogen-bond-schema { text-align: center; margin: 20px auto; position: relative; }
+        .hydrogen-bond-schema .water-molecule-1 { width: 50px; height: 50px; background: #f0f0f0; border: 2px dashed #ff4500; border-radius: 50%; display: inline-block; position: relative; margin: 0 20px; }
+        .hydrogen-bond-schema .water-molecule-2 { width: 50px; height: 50px; background: #f0f0f0; border: 2px dashed #ff4500; border-radius: 50%; display: inline-block; position: relative; }
+        .hydrogen-bond-schema .h-bond { width: 40px; height: 2px; background: #00ced1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(30deg); }
+        .hydrogen-bond-schema .h-bond-2 { width: 40px; height: 2px; background: #00ced1; position: absolute; top: 50%; right: -20px; transform: translateY(-50%) rotate(-30deg); }
+        .states-visual { text-align: center; margin: 20px 0; }
+        .states-visual .state { display: inline-block; width: 100px; height: 100px; margin: 0 10px; position: relative; }
+        .states-visual .particle { width: 10px; height: 10px; background: #007bff; border-radius: 50%; position: absolute; }
+        .states-visual .solid .particle { animation: vibrate 0.5s infinite; }
+        .states-visual .liquid .particle { animation: moveRandom 1s infinite; }
+        .states-visual .gas .particle { animation: scatter 2s infinite; }
+        .test { margin-top: 20px; }
+        .question { margin-bottom: 15px; opacity: 0; transform: translateY(20px); animation: fadeInUp 0.5s ease forwards; }
+        .question:not(:first-child) { animation-delay: 0.1s; }
+        .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+        .option { background: #e9ecef; padding: 10px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
+        .option:hover { background: #e9ecef; transform: scale(1.02); }
+        .option.selected { background: #ffff99; border-color: #ffeb3b; transition: all 0.3s ease; }
+        .option.correct { background: #d4edda; color: #155724; border: 2px solid #28a745; animation: pulse 0.5s ease; }
+        .option.incorrect { background: #f8d7da; color: #721c24; border: 2px solid #dc3545; animation: pulse 0.5s ease; }
+        button { background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; transition: background 0.3s ease; }
+        button:hover { background: #218838; transform: scale(1.05); }
+        .footer { text-align: center; margin-top: 20px; font-size: 0.9em; color: #666; }
+
+        /* Animacje */
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes rotate { to { transform: translateX(-50%) rotate(360deg); } }
+        @keyframes orbit { 0% { transform: rotate(0deg) translateX(60px); } 100% { transform: rotate(360deg) translateX(60px); } }
+        @keyframes vibrate { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(2px, 2px); } 75% { transform: translate(-2px, -2px); } }
+        @keyframes moveRandom { 0% { transform: translate(0, 0); } 25% { transform: translate(10px, 5px); } 50% { transform: translate(5px, -5px); } 75% { transform: translate(-10px, 10px); } 100% { transform: translate(0, 0); } }
+        @keyframes scatter { 0% { transform: translate(0, 0); } 25% { transform: translate(20px, 10px); } 50% { transform: translate(-20px, -10px); } 75% { transform: translate(15px, -15px); } 100% { transform: translate(0, 0); } }
+        @keyframes fadeInArrow { to { opacity: 1; } }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Test o Cząsteczkach</h1>
-        <div class="progress" id="progress">Pytanie 1 z 20</div>
-        <form id="quizForm">
-            <!-- Pytanie 1 -->
-            <div class="question" id="q1">
-                <h3>1. Co to jest cząsteczka?</h3>
-                <div class="options">
-                    <label class="option" data-correct="True" data-qid="1">
-                        <input type="radio" name="q1" value="a" style="display: none;"> a) Zespół dwóch lub więcej atomów połączonych wiązaniami chemicznymi
-                    </label>
-                    <label class="option" data-correct="False" data-qid="1">
-                        <input type="radio" name="q1" value="b" style="display: none;"> b) Pojedynczy atom
-                    </label>
-                    <label class="option" data-correct="False" data-qid="1">
-                        <input type="radio" name="q1" value="c" style="display: none;"> c) Mieszanina pierwiastków
-                    </label>
-                    <label class="option" data-correct="False" data-qid="1">
-                        <input type="radio" name="q1" value="d" style="display: none;"> d) Substancja bez struktury
-                    </label>
-                </div>
-                <button type="button" onclick="checkAnswer(1)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback1"></div>
-            </div>
+        <h1>Fizyka Atomowa Dla Uczniów Klas 7</h1>
 
-            <!-- Pytanie 2 -->
-            <div class="question" id="q2">
-                <h3>2. Która z poniższych jest cząsteczką wody?</h3>
-                <div class="options">
-                    <label class="option" data-correct="True" data-qid="2">
-                        <input type="radio" name="q2" value="a" style="display: none;"> a) H₂O
-                    </label>
-                    <label class="option" data-correct="False" data-qid="2">
-                        <input type="radio" name="q2" value="b" style="display: none;"> b) O₂
-                    </label>
-                    <label class="option" data-correct="False" data-qid="2">
-                        <input type="radio" name="q2" value="c" style="display: none;"> c) CO₂
-                    </label>
-                    <label class="option" data-correct="False" data-qid="2">
-                        <input type="radio" name="q2" value="d" style="display: none;"> d) N₂
-                    </label>
-                </div>
-                <button type="button" onclick="checkAnswer(2)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback2"></div>
-            </div>
+        <h2>Tematy do nauki</h2>
+        <div class="tiles">
+            <div class="tile" onclick="toggleContent('atoms')">Atomy i cząsteczki</div>
+            <div class="tile" onclick="toggleContent('interactions')">Oddziaływania międzycząsteczkowe</div>
+            <div class="tile" onclick="toggleContent('surface')">Badanie napięcia powierzchniowego</div>
+            <div class="tile" onclick="toggleContent('states')">Stany skupienia i właściwości</div>
+            <div class="tile" onclick="toggleContent('mass')">Masa a siła ciężkości</div>
+        </div>
 
-            <!-- Pytanie 3 -->
-            <div class="question" id="q3">
-                <h3>3. Jakie wiązanie łączy atomy w cząsteczce tlenu (O₂)?</h3>
-                <div class="options">
-                    <label class="option" data-correct="True" data-qid="3">
-                        <input type="radio" name="q3" value="a" style="display: none;"> a) Wiązanie podwójne
-                    </label>
-                    <label class="option" data-correct="False" data-qid="3">
-                        <input type="radio" name="q3" value="b" style="display: none;"> b) Wiązanie pojedyncze
-                    </label>
-                    <label class="option" data-correct="False" data-qid="3">
-                        <input type="radio" name="q3" value="c" style="display: none;"> c) Wiązanie potrójne
-                    </label>
-                    <label class="option" data-correct="False" data-qid="3">
-                        <input type="radio" name="q3" value="d" style="display: none;"> d) Wiązanie jonowe
-                    </label>
+        <div id="atoms" class="content">
+            <h3>Atomy i cząsteczki</h3>
+            <p>Atom to najmniejszy budulec materii, który nie da się podzielić w zwykłych reakcjach chemicznych. W jego centrum znajduje się jądro, które zawiera protony i neutrony. Protony są naładowane dodatnio i decydują o rodzaju atomu – np. atom wodoru ma 1 proton, a atom tlenu 8 protonów. Neutrony nie mają ładunku, ale pomagają jądru być stabilnym; ich liczba może się różnić, tworząc izotopy, np. węgiel-12 (6 neutronów), węgiel-14 (8 neutronów), wodór-1 (0 neutronów) i wodór-2 (1 neutron). Elektrony, naładowane ujemnie, krążą wokół jądra i są bardzo lekkie – ich ruch przypomina taniec! Izotopy to odmiany tego samego pierwiastka z różną liczbą neutronów, co wpływa na masę, ale nie na chemiczne właściwości. Cząsteczka powstaje, gdy atomy łączą się wiązaniami chemicznymi, np. woda (H₂O) ma dwa atomy wodoru i jeden atom tlenu. Spójrz na wirujący schemat atomu, cząsteczki wody i wiązania wodorowego poniżej!</p>
+            <div class="atom-schema">
+                <div class="nucleus">
+                    <div class="proton"></div>
+                    <div class="proton"></div>
+                    <div class="proton"></div>
+                    <div class="neutron"></div>
+                    <div class="neutron"></div>
+                    <div class="neutron"></div>
                 </div>
-                <button type="button" onclick="checkAnswer(3)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback3"></div>
+                <div class="electron-ring">
+                    <div class="electron"></div>
+                    <div class="electron"></div>
+                </div>
+                <div class="arrow arrow-1">1. Jądro (protoni + neutrony)</div>
+                <div class="arrow arrow-2">2. Protony (ładunek +)</div>
+                <div class="arrow arrow-3">3. Neutrony (bez ładunku)</div>
+                <div class="arrow arrow-4">4. Elektrony (ładunek -)</div>
             </div>
+            <div class="water-schema">
+                <div class="atom-h"></div>
+                <div class="bond bond-1"></div>
+                <div class="atom-o"></div>
+                <div class="bond bond-2"></div>
+                <div class="atom-h"></div>
+                <p style="margin-top: 10px;">Cząsteczka wody (H₂O): atomy wodoru (różowe) i tlen (pomarańczowy) połączone wiązaniami (niebieskie).</p>
+            </div>
+            <div class="hydrogen-bond-schema">
+                <div class="water-molecule-1"></div>
+                <div class="h-bond"></div>
+                <div class="water-molecule-2"></div>
+                <div class="h-bond-2"></div>
+                <p style="margin-top: 10px;">Wiązanie wodorowe: połączenie między cząsteczkami wody (szare obwody) za pomocą wiązań wodorowych (turkusowe).</p>
+            </div>
+        </div>
 
-            <!-- Pytanie 4 -->
-            <div class="question" id="q4">
-                <h3>4. Ile atomów wodoru znajduje się w cząsteczce metanu (CH₄)?</h3>
-                <div class="options">
-                    <label class="option" data-correct="True" data-qid="4">
-                        <input type="radio" name="q4" value="a" style="display: none;"> a) 4
-                    </label>
-                    <label class="option" data-correct="False" data-qid="4">
-                        <input type="radio" name="q4" value="b" style="display: none;"> b) 2
-                    </label>
-                    <label class="option" data-correct="False" data-qid="4">
-                        <input type="radio" name="q4" value="c" style="display: none;"> c) 3
-                    </label>
-                    <label class="option" data-correct="False" data-qid="4">
-                        <input type="radio" name="q4" value="d" style="display: none;"> d) 1
-                    </label>
-                </div>
-                <button type="button" onclick="checkAnswer(4)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback4"></div>
-            </div>
+        <div id="interactions" class="content">
+            <h3>Oddziaływania międzycząsteczkowe</h3>
+            <p>Oddziaływania międzycząsteczkowe to siły, które przyciągają cząsteczki do siebie. Najważniejsze z nich to wiązania wodorowe, które występują w wodzie – dzięki nim lód jest lżejszy od wody i unosi się na jej powierzchni. Inne przykłady to siły van der Waalsa, które działają między cząsteczkami tłuszczów czy gazów, np. w smarach czy helu. Te siły decydują o tym, czy substancja jest stała, ciekła czy gazowa, zależnie od tego, jak mocno cząsteczki się trzymają – im silniejsze oddziaływania, tym substancja jest twardsza!</p>
+        </div>
 
-            <!-- Pytanie 5 -->
-            <div class="question" id="q5">
-                <h3>5. Która cząsteczka jest dwutlenkiem węgla?</h3>
-                <div class="options">
-                    <label class="option" data-correct="True" data-qid="5">
-                        <input type="radio" name="q5" value="a" style="display: none;"> a) CO₂
-                    </label>
-                    <label class="option" data-correct="False" data-qid="5">
-                        <input type="radio" name="q5" value="b" style="display: none;"> b) CO
-                    </label>
-                    <label class="option" data-correct="False" data-qid="5">
-                        <input type="radio" name="q5" value="c" style="display: none;"> c) CH₄
-                    </label>
-                    <label class="option" data-correct="False" data-qid="5">
-                        <input type="radio" name="q5" value="d" style="display: none;"> d) H₂O
-                    </label>
-                </div>
-                <button type="button" onclick="checkAnswer(5)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback5"></div>
-            </div>
+        <div id="surface" class="content">
+            <h3>Badanie napięcia powierzchniowego</h3>
+            <p>Napięcie powierzchniowe to siła, która sprawia, że powierzchnia wody zachowuje się jak elastyczna błona. Dzięki temu owady, takie jak stonogi wodne, mogą po niej chodzić, a krople wody tworzą kuliste kształty, np. na liściach roślin. Możesz to zbadać w domu: weź miskę z wody, połóż na niej kawałek papieru i dodaj kroplę detergentu – powierzchnia się załamie, bo detergent obniża napięcie. To ważne w przyrodzie, np. dla roślin, i w przemyśle, np. przy produkcji mydła czy farb!</p>
+        </div>
 
-            <!-- Pytanie 6 -->
-            <div class="question" id="q6">
-                <h3>6. Jaki typ wiązania występuje w cząsteczce chlorowodoru (HCl)?</h3>
-                <div class="options">
-                    <label class="option" data-correct="True" data-qid="6">
-                        <input type="radio" name="q6" value="a" style="display: none;"> a) Wiązanie kowalencyjne spolaryzowane
-                    </label>
-                    <label class="option" data-correct="False" data-qid="6">
-                        <input type="radio" name="q6" value="b" style="display: none;"> b) Wiązanie jonowe
-                    </label>
-                    <label class="option" data-correct="False" data-qid="6">
-                        <input type="radio" name="q6" value="c" style="display: none;"> c) Wiązanie wodorowe
-                    </label>
-                    <label class="option" data-correct="False" data-qid="6">
-                        <input type="radio" name="q6" value="d" style="display: none;"> d) Wiązanie metaliczne
-                    </label>
+        <div id="states" class="content">
+            <h3>Stany skupienia i właściwości</h3>
+            <p>Materia występuje w trzech stanach: stałym, ciekłym i gazowym. W ciele stałym, jak lód, cząsteczki są blisko siebie i prawie się nie ruszają, więc ma stały kształt i jest twarde. W cieczy, np. wodzie, cząsteczki mogą się przesuwać, ale trzymają się razem, więc płynie i przyjmuje kształt naczynia. W gazie, jak powietrze, cząsteczki są daleko i szybko się poruszają, rozprzestrzeniając się we wszystkich kierunkach. Spójrz na wizualizację, która pokazuje te różnice!</p>
+            <div class="states-visual">
+                <div class="state solid">
+                    <h4>Ciało stałe</h4>
+                    <div class="particle" style="top: 20px; left: 20px;"></div>
+                    <div class="particle" style="top: 20px; left: 50px;"></div>
+                    <div class="particle" style="top: 50px; left: 20px;"></div>
+                    <div class="particle" style="top: 50px; left: 50px;"></div>
                 </div>
-                <button type="button" onclick="checkAnswer(6)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback6"></div>
+                <div class="state liquid">
+                    <h4>Ciecz</h4>
+                    <div class="particle" style="top: 20px; left: 20px;"></div>
+                    <div class="particle" style="top: 20px; left: 70px;"></div>
+                    <div class="particle" style="top: 50px; left: 40px;"></div>
+                    <div class="particle" style="top: 70px; left: 30px;"></div>
+                </div>
+                <div class="state gas">
+                    <h4>Gaz</h4>
+                    <div class="particle" style="top: 20px; left: 20px;"></div>
+                    <div class="particle" style="top: 30px; left: 80px;"></div>
+                    <div class="particle" style="top: 70px; left: 10px;"></div>
+                    <div class="particle" style="top: 60px; left: 90px;"></div>
+                </div>
             </div>
+        </div>
 
-            <!-- Pytanie 7 -->
-            <div class="question" id="q7">
-                <h3>7. Która cząsteczka ma kształt liniowy?</h3>
-                <div class="options">
-                    <label class="option" data-correct="True" data-qid="7">
-                        <input type="radio" name="q7" value="a" style="display: none;"> a) CO₂
-                    </label>
-                    <label class="option" data-correct="False" data-qid="7">
-                        <input type="radio" name="q7" value="b" style="display: none;"> b) H₂O
-                    </label>
-                    <label class="option" data-correct="False" data-qid="7">
-                        <input type="radio" name="q7" value="c" style="display: none;"> c) NH₃
-                    </label>
-                    <label class="option" data-correct="False" data-qid="7">
-                        <input type="radio" name="q7" value="d" style="display: none;"> d) CH₄
-                    </label>
-                </div>
-                <button type="button" onclick="checkAnswer(7)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback7"></div>
-            </div>
+        <div id="mass" class="content">
+            <h3>Masa a siła ciężkości</h3>
+            <p>Masa to ilość materii w przedmiocie, np. 1 kg cukru ma tę samą masę na Ziemi i na Księżycu, bo to stała właściwość. Siła ciężkości, czyli waga, zależy od grawitacji – na Ziemi przyciąga nas mocniej (9,8 m/s²), więc czujemy większą wagę, a na Księżycu, gdzie grawitacja jest słabsza (1,6 m/s²), waga jest mniejsza (np. 1 kg waży tam tylko 0,16 kg). To kluczowe w eksperymentach kosmicznych, np. dla astronautów skaczących na Księżycu!</p>
+        </div>
 
-            <!-- Pytanie 8 -->
-            <div class="question" id="q8">
-                <h3>8. Ile wiązań wodorowych może utworzyć cząsteczka wody?</h3>
-                <div class="options">
-                    <label class="option" data-correct="True" data-qid="8">
-                        <input type="radio" name="q8" value="a" style="display: none;"> a) 2
-                    </label>
-                    <label class="option" data-correct="False" data-qid="8">
-                        <input type="radio" name="q8" value="b" style="display: none;"> b) 1
-                    </label>
-                    <label class="option" data-correct="False" data-qid="8">
-                        <input type="radio" name="q8" value="c" style="display: none;"> c) 3
-                    </label>
-                    <label class="option" data-correct="False" data-qid="8">
-                        <input type="radio" name="q8" value="d" style="display: none;"> d) 4
-                    </label>
-                </div>
-                <button type="button" onclick="checkAnswer(8)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback8"></div>
-            </div>
+        <h2>Interaktywny schemat</h2>
+        <div class="schema">
+            <div class="schema-item" onclick="toggleDesc('atom')">Atom</div>
+            <div class="schema-item" onclick="toggleDesc('molecule')">Cząsteczka</div>
+            <div class="schema-item" onclick="toggleDesc('force')">Siła</div>
+            <div class="schema-item" onclick="toggleDesc('state')">Stan skupienia</div>
+        </div>
+        <div id="atom-desc" class="schema-desc">Atom to mała kulka z jądrem (protoni i neutrony) i elektronami krążącymi wokół – podstawowy klocek materii!</div>
+        <div id="molecule-desc" class="schema-desc">Cząsteczka to kilka atomów złączonych, np. H₂O, które razem tworzą substancję.</div>
+        <div id="force-desc" class="schema-desc">Siła to pchanie lub ciągnięcie, np. grawitacja trzyma nas na Ziemi.</div>
+        <div id="state-desc" class="schema-desc">Stan skupienia to forma materii: stały (lód), ciekły (woda) lub gazowy (para).</div>
 
-            <!-- Pytanie 9 -->
-            <div class="question" id="q9">
-                <h3>9. Który pierwiastek nie tworzy cząsteczek dwuatomowych w normalnych warunkach?</h3>
+        <h2>Test dla Izabeli</h2>
+        <div class="test">
+            <div class="question">
+                <h3>1. Z czego składa się jądro atomu?</h3>
                 <div class="options">
-                    <label class="option" data-correct="True" data-qid="9">
-                        <input type="radio" name="q9" value="a" style="display: none;"> a) Hel (He)
-                    </label>
-                    <label class="option" data-correct="False" data-qid="9">
-                        <input type="radio" name="q9" value="b" style="display: none;"> b) Wodor (H₂)
-                    </label>
-                    <label class="option" data-correct="False" data-qid="9">
-                        <input type="radio" name="q9" value="c" style="display: none;"> c) Tlen (O₂)
-                    </label>
-                    <label class="option" data-correct="False" data-qid="9">
-                        <input type="radio" name="q9" value="d" style="display: none;"> d) Azot (N₂)
-                    </label>
+                    <div class="option" data-correct="true" onclick="selectOption(1, 'a')">a) Protony i neutrony</div>
+                    <div class="option" data-correct="false" onclick="selectOption(1, 'b')">b) Tylko elektrony</div>
+                    <div class="option" data-correct="false" onclick="selectOption(1, 'c')">c) Tlen i wodór</div>
                 </div>
-                <button type="button" onclick="checkAnswer(9)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback9"></div>
             </div>
-
-            <!-- Pytanie 10 -->
-            <div class="question" id="q10">
-                <h3>10. Jaki jest kąt wiązania w cząsteczce wody (H₂O)?</h3>
+            <div class="question">
+                <h3>2. Która cząsteczka to para wodna?</h3>
                 <div class="options">
-                    <label class="option" data-correct="True" data-qid="10">
-                        <input type="radio" name="q10" value="a" style="display: none;"> a) 104,5°
-                    </label>
-                    <label class="option" data-correct="False" data-qid="10">
-                        <input type="radio" name="q10" value="b" style="display: none;"> b) 90°
-                    </label>
-                    <label class="option" data-correct="False" data-qid="10">
-                        <input type="radio" name="q10" value="c" style="display: none;"> c) 120°
-                    </label>
-                    <label class="option" data-correct="False" data-qid="10">
-                        <input type="radio" name="q10" value="d" style="display: none;"> d) 180°
-                    </label>
+                    <div class="option" data-correct="true" onclick="selectOption(2, 'a')">a) H₂O (w gazie)</div>
+                    <div class="option" data-correct="false" onclick="selectOption(2, 'b')">b) O₂</div>
+                    <div class="option" data-correct="false" onclick="selectOption(2, 'c')">c) CO₂</div>
                 </div>
-                <button type="button" onclick="checkAnswer(10)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback10"></div>
             </div>
-
-            <!-- Pytanie 11 -->
-            <div class="question" id="q11">
-                <h3>11. Która cząsteczka ma strukturę tetrahedralną?</h3>
+            <div class="question">
+                <h3>3. Co powoduje, że lód jest lżejszy od wody?</h3>
                 <div class="options">
-                    <label class="option" data-correct="True" data-qid="11">
-                        <input type="radio" name="q11" value="a" style="display: none;"> a) CH₄
-                    </label>
-                    <label class="option" data-correct="False" data-qid="11">
-                        <input type="radio" name="q11" value="b" style="display: none;"> b) CO₂
-                    </label>
-                    <label class="option" data-correct="False" data-qid="11">
-                        <input type="radio" name="q11" value="c" style="display: none;"> c) H₂O
-                    </label>
-                    <label class="option" data-correct="False" data-qid="11">
-                        <input type="radio" name="q11" value="d" style="display: none;"> d) O₂
-                    </label>
+                    <div class="option" data-correct="true" onclick="selectOption(3, 'a')">a) Wiązania wodorowe</div>
+                    <div class="option" data-correct="false" onclick="selectOption(3, 'b')">b) Wysoka temperatura</div>
+                    <div class="option" data-correct="false" onclick="selectOption(3, 'c')">c) Brak grawitacji</div>
                 </div>
-                <button type="button" onclick="checkAnswer(11)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback11"></div>
             </div>
-
-            <!-- Pytanie 12 -->
-            <div class="question" id="q12">
-                <h3>12. Jakie wiązanie występuje w cząsteczce azotu (N₂)?</h3>
+            <div class="question">
+                <h3>4. Co obniża napięcie powierzchniowe wody?</h3>
                 <div class="options">
-                    <label class="option" data-correct="True" data-qid="12">
-                        <input type="radio" name="q12" value="a" style="display: none;"> a) Wiązanie potrójne
-                    </label>
-                    <label class="option" data-correct="False" data-qid="12">
-                        <input type="radio" name="q12" value="b" style="display: none;"> b) Wiązanie pojedyncze
-                    </label>
-                    <label class="option" data-correct="False" data-qid="12">
-                        <input type="radio" name="q12" value="c" style="display: none;"> c) Wiązanie podwójne
-                    </label>
-                    <label class="option" data-correct="False" data-qid="12">
-                        <input type="radio" name="q12" value="d" style="display: none;"> d) Wiązanie jonowe
-                    </label>
+                    <div class="option" data-correct="true" onclick="selectOption(4, 'a')">a) Detergent</div>
+                    <div class="option" data-correct="false" onclick="selectOption(4, 'b')">b) Cukier</div>
+                    <div class="option" data-correct="false" onclick="selectOption(4, 'c')">c) Sól</div>
                 </div>
-                <button type="button" onclick="checkAnswer(12)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback12"></div>
             </div>
-
-            <!-- Pytanie 13 -->
-            <div class="question" id="q13">
-                <h3>13. Która cząsteczka jest gazem szlachetnym?</h3>
+            <div class="question">
+                <h3>5. Który stan skupienia ma największy ruch cząsteczek?</h3>
                 <div class="options">
-                    <label class="option" data-correct="True" data-qid="13">
-                        <input type="radio" name="q13" value="a" style="display: none;"> a) Neon (Ne)
-                    </label>
-                    <label class="option" data-correct="False" data-qid="13">
-                        <input type="radio" name="q13" value="b" style="display: none;"> b) Tlen (O₂)
-                    </label>
-                    <label class="option" data-correct="False" data-qid="13">
-                        <input type="radio" name="q13" value="c" style="display: none;"> c) Wodor (H₂)
-                    </label>
-                    <label class="option" data-correct="False" data-qid="13">
-                        <input type="radio" name="q13" value="d" style="display: none;"> d) Dwutlenek węgla (CO₂)
-                    </label>
+                    <div class="option" data-correct="true" onclick="selectOption(5, 'a')">a) Gazowy</div>
+                    <div class="option" data-correct="false" onclick="selectOption(5, 'b')">b) Ciekły</div>
+                    <div class="option" data-correct="false" onclick="selectOption(5, 'c')">c) Stały</div>
                 </div>
-                <button type="button" onclick="checkAnswer(13)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback13"></div>
             </div>
-
-            <!-- Pytanie 14 -->
-            <div class="question" id="q14">
-                <h3>14. Jaki jest wzór cząsteczki amoniaku?</h3>
+            <div class="question">
+                <h3>6. Jaki ładunek mają protony?</h3>
                 <div class="options">
-                    <label class="option" data-correct="True" data-qid="14">
-                        <input type="radio" name="q14" value="a" style="display: none;"> a) NH₃
-                    </label>
-                    <label class="option" data-correct="False" data-qid="14">
-                        <input type="radio" name="q14" value="b" style="display: none;"> b) CH₄
-                    </label>
-                    <label class="option" data-correct="False" data-qid="14">
-                        <input type="radio" name="q14" value="c" style="display: none;"> c) H₂O
-                    </label>
-                    <label class="option" data-correct="False" data-qid="14">
-                        <input type="radio" name="q14" value="d" style="display: none;"> d) CO₂
-                    </label>
+                    <div class="option" data-correct="true" onclick="selectOption(6, 'a')">a) Dodatni</div>
+                    <div class="option" data-correct="false" onclick="selectOption(6, 'b')">b) Ujemny</div>
+                    <div class="option" data-correct="false" onclick="selectOption(6, 'c')">c) Brak ładunku</div>
                 </div>
-                <button type="button" onclick="checkAnswer(14)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback14"></div>
             </div>
-
-            <!-- Pytanie 15 -->
-            <div class="question" id="q15">
-                <h3>15. Która cząsteczka ma ładunek elektryczny?</h3>
+            <div class="question">
+                <h3>7. Jaki ładunek mają neutrony?</h3>
                 <div class="options">
-                    <label class="option" data-correct="False" data-qid="15">
-                        <input type="radio" name="q15" value="a" style="display: none;"> a) H₂O
-                    </label>
-                    <label class="option" data-correct="False" data-qid="15">
-                        <input type="radio" name="q15" value="b" style="display: none;"> b) CO₂
-                    </label>
-                    <label class="option" data-correct="True" data-qid="15">
-                        <input type="radio" name="q15" value="c" style="display: none;"> c) Jon amonowy (NH₄⁺)
-                    </label>
-                    <label class="option" data-correct="False" data-qid="15">
-                        <input type="radio" name="q15" value="d" style="display: none;"> d) O₂
-                    </label>
+                    <div class="option" data-correct="true" onclick="selectOption(7, 'a')">a) Brak ładunku</div>
+                    <div class="option" data-correct="false" onclick="selectOption(7, 'b')">b) Dodatni</div>
+                    <div class="option" data-correct="false" onclick="selectOption(7, 'c')">c) Ujemny</div>
                 </div>
-                <button type="button" onclick="checkAnswer(15)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback15"></div>
             </div>
-
-            <!-- Pytanie 16 -->
-            <div class="question" id="q16">
-                <h3>16. Jaki jest wzór cząsteczki tlenku węgla?</h3>
+            <div class="question">
+                <h3>8. Gdzie znajdują się protony i neutrony?</h3>
                 <div class="options">
-                    <label class="option" data-correct="True" data-qid="16">
-                        <input type="radio" name="q16" value="a" style="display: none;"> a) CO
-                    </label>
-                    <label class="option" data-correct="False" data-qid="16">
-                        <input type="radio" name="q16" value="b" style="display: none;"> b) CO₂
-                    </label>
-                    <label class="option" data-correct="False" data-qid="16">
-                        <input type="radio" name="q16" value="c" style="display: none;"> c) CH₄
-                    </label>
-                    <label class="option" data-correct="False" data-qid="16">
-                        <input type="radio" name="q16" value="d" style="display: none;"> d) H₂O
-                    </label>
+                    <div class="option" data-correct="true" onclick="selectOption(8, 'a')">a) W jądrze</div>
+                    <div class="option" data-correct="false" onclick="selectOption(8, 'b')">b) Wokół jądra</div>
+                    <div class="option" data-correct="false" onclick="selectOption(8, 'c')">c) Na zewnątrz atomu</div>
                 </div>
-                <button type="button" onclick="checkAnswer(16)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback16"></div>
             </div>
-
-            <!-- Pytanie 17 -->
-            <div class="question" id="q17">
-                <h3>17. Która cząsteczka ma strukturę piramidalną?</h3>
+            <div class="question">
+                <h3>9. Ile protonów ma atom wodoru?</h3>
                 <div class="options">
-                    <label class="option" data-correct="True" data-qid="17">
-                        <input type="radio" name="q17" value="a" style="display: none;"> a) NH₃
-                    </label>
-                    <label class="option" data-correct="False" data-qid="17">
-                        <input type="radio" name="q17" value="b" style="display: none;"> b) CO₂
-                    </label>
-                    <label class="option" data-correct="False" data-qid="17">
-                        <input type="radio" name="q17" value="c" style="display: none;"> c) CH₄
-                    </label>
-                    <label class="option" data-correct="False" data-qid="17">
-                        <input type="radio" name="q17" value="d" style="display: none;"> d) O₂
-                    </label>
+                    <div class="option" data-correct="true" onclick="selectOption(9, 'a')">a) 1</div>
+                    <div class="option" data-correct="false" onclick="selectOption(9, 'b')">b) 2</div>
+                    <div class="option" data-correct="false" onclick="selectOption(9, 'c')">c) 8</div>
                 </div>
-                <button type="button" onclick="checkAnswer(17)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback17"></div>
             </div>
-
-            <!-- Pytanie 18 -->
-            <div class="question" id="q18">
-                <h3>18. Jaki jest wzór cząsteczki etanu?</h3>
+            <div class="question">
+                <h3>10. Co stabilizuje jądro atomu?</h3>
                 <div class="options">
-                    <label class="option" data-correct="True" data-qid="18">
-                        <input type="radio" name="q18" value="a" style="display: none;"> a) C₂H₆
-                    </label>
-                    <label class="option" data-correct="False" data-qid="18">
-                        <input type="radio" name="q18" value="b" style="display: none;"> b) C₂H₄
-                    </label>
-                    <label class="option" data-correct="False" data-qid="18">
-                        <input type="radio" name="q18" value="c" style="display: none;"> c) CH₄
-                    </label>
-                    <label class="option" data-correct="False" data-qid="18">
-                        <input type="radio" name="q18" value="d" style="display: none;"> d) C₂H₂
-                    </label>
+                    <div class="option" data-correct="true" onclick="selectOption(10, 'a')">a) Neutrony</div>
+                    <div class="option" data-correct="false" onclick="selectOption(10, 'b')">b) Elektrony</div>
+                    <div class="option" data-correct="false" onclick="selectOption(10, 'c')">c) Protony</div>
                 </div>
-                <button type="button" onclick="checkAnswer(18)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback18"></div>
             </div>
-
-            <!-- Pytanie 19 -->
-            <div class="question" id="q19">
-                <h3>19. Która cząsteczka jest odpowiedzialna za efekt cieplarniany?</h3>
+            <div class="question">
+                <h3>11. Jaki ładunek mają elektrony?</h3>
                 <div class="options">
-                    <label class="option" data-correct="True" data-qid="19">
-                        <input type="radio" name="q19" value="a" style="display: none;"> a) CO₂
-                    </label>
-                    <label class="option" data-correct="False" data-qid="19">
-                        <input type="radio" name="q19" value="b" style="display: none;"> b) O₂
-                    </label>
-                    <label class="option" data-correct="False" data-qid="19">
-                        <input type="radio" name="q19" value="c" style="display: none;"> c) N₂
-                    </label>
-                    <label class="option" data-correct="False" data-qid="19">
-                        <input type="radio" name="q19" value="d" style="display: none;"> d) He
-                    </label>
+                    <div class="option" data-correct="true" onclick="selectOption(11, 'a')">a) Ujemny</div>
+                    <div class="option" data-correct="false" onclick="selectOption(11, 'b')">b) Dodatni</div>
+                    <div class="option" data-correct="false" onclick="selectOption(11, 'c')">c) Brak ładunku</div>
                 </div>
-                <button type="button" onclick="checkAnswer(19)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback19"></div>
             </div>
-
-            <!-- Pytanie 20 -->
-            <div class="question" id="q20">
-                <h3>20. Jaki jest kąt wiązania w cząsteczce metanu (CH₄)?</h3>
+            <div class="question">
+                <h3>12. Ile protonów ma atom tlenu?</h3>
                 <div class="options">
-                    <label class="option" data-correct="True" data-qid="20">
-                        <input type="radio" name="q20" value="a" style="display: none;"> a) 109,5°
-                    </label>
-                    <label class="option" data-correct="False" data-qid="20">
-                        <input type="radio" name="q20" value="b" style="display: none;"> b) 90°
-                    </label>
-                    <label class="option" data-correct="False" data-qid="20">
-                        <input type="radio" name="q20" value="c" style="display: none;"> c) 120°
-                    </label>
-                    <label class="option" data-correct="False" data-qid="20">
-                        <input type="radio" name="q20" value="d" style="display: none;"> d) 180°
-                    </label>
+                    <div class="option" data-correct="true" onclick="selectOption(12, 'a')">a) 8</div>
+                    <div class="option" data-correct="false" onclick="selectOption(12, 'b')">b) 1</div>
+                    <div class="option" data-correct="false" onclick="selectOption(12, 'c')">c) 6</div>
                 </div>
-                <button type="button" onclick="checkAnswer(20)">Sprawdź odpowiedź</button>
-                <div class="feedback" id="feedback20"></div>
             </div>
-        </form>
-        <button type="button" onclick="showResults()" style="display: none;" id="resultsBtn">Pokaż wyniki</button>
+            <div class="question">
+                <h3>13. Co różni izotopy tego samego pierwiastka?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(13, 'a')">a) Liczba neutronów</div>
+                    <div class="option" data-correct="false" onclick="selectOption(13, 'b')">b) Liczba protonów</div>
+                    <div class="option" data-correct="false" onclick="selectOption(13, 'c')">c) Liczba elektronów</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>14. Dlaczego protony się odpychają?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(14, 'a')">a) Mają taki sam ładunek</div>
+                    <div class="option" data-correct="false" onclick="selectOption(14, 'b')">b) Są za duże</div>
+                    <div class="option" data-correct="false" onclick="selectOption(14, 'c')">c) Brak neutronów</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>15. Gdzie krążą elektrony?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(15, 'a')">a) Wokół jądra</div>
+                    <div class="option" data-correct="false" onclick="selectOption(15, 'b')">b) W jądrze</div>
+                    <div class="option" data-correct="false" onclick="selectOption(15, 'c')">c) Na zewnątrz atomu</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>16. Co określa rodzaj atomu?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(16, 'a')">a) Liczba protonów</div>
+                    <div class="option" data-correct="false" onclick="selectOption(16, 'b')">b) Liczba neutronów</div>
+                    <div class="option" data-correct="false" onclick="selectOption(16, 'c')">c) Liczba elektronów</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>17. Czy neutrony mają masę?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(17, 'a')">a) Tak</div>
+                    <div class="option" data-correct="false" onclick="selectOption(17, 'b')">b) Nie</div>
+                    <div class="option" data-correct="false" onclick="selectOption(17, 'c')">c) Tylko w gazach</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>18. Co trzyma jądro razem mimo odpychania protonów?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(18, 'a')">a) Siły jądrowe</div>
+                    <div class="option" data-correct="false" onclick="selectOption(18, 'b')">b) Elektrony</div>
+                    <div class="option" data-correct="false" onclick="selectOption(18, 'c')">c) Grawitacja</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>19. Ile neutronów może mieć atom wodoru?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(19, 'a')">a) 0 lub 1</div>
+                    <div class="option" data-correct="false" onclick="selectOption(19, 'b')">b) 8</div>
+                    <div class="option" data-correct="false" onclick="selectOption(19, 'c')">c) 2</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>20. Co się dzieje, gdy atom traci elektron?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(20, 'a')">a) Staje się jonem dodatnim</div>
+                    <div class="option" data-correct="false" onclick="selectOption(20, 'b')">b) Staje się lżejszy</div>
+                    <div class="option" data-correct="false" onclick="selectOption(20, 'c')">c) Traci protony</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>21. Który izotop wodoru ma 1 neutron?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(21, 'a')">a) Wodór-2</div>
+                    <div class="option" data-correct="false" onclick="selectOption(21, 'b')">b) Wodór-1</div>
+                    <div class="option" data-correct="false" onclick="selectOption(21, 'c')">c) Węgiel-14</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>22. Ile neutronów ma węgiel-14?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(22, 'a')">a) 8</div>
+                    <div class="option" data-correct="false" onclick="selectOption(22, 'b')">b) 6</div>
+                    <div class="option" data-correct="false" onclick="selectOption(22, 'c')">c) 12</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>23. Co łączy cząsteczki wody w lodzie?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(23, 'a')">a) Wiązania wodorowe</div>
+                    <div class="option" data-correct="false" onclick="selectOption(23, 'b')">b) Wiązania kowalencyjne</div>
+                    <div class="option" data-correct="false" onclick="selectOption(23, 'c')">c) Siły grawitacyjne</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>24. Jaki pierwiastek ma izotopy węgiel-12 i węgiel-14?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(24, 'a')">a) Węgiel</div>
+                    <div class="option" data-correct="false" onclick="selectOption(24, 'b')">b) Wodór</div>
+                    <div class="option" data-correct="false" onclick="selectOption(24, 'c')">c) Tlen</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>25. Co powoduje, że woda ma wysoką temperaturę wrzenia?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(25, 'a')">a) Wiązania wodorowe</div>
+                    <div class="option" data-correct="false" onclick="selectOption(25, 'b')">b) Brak neutronów</div>
+                    <div class="option" data-correct="false" onclick="selectOption(25, 'c')">c) Duża liczba protonów</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>26. Ile atomów wodoru jest w cząsteczce wody?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(26, 'a')">a) 2</div>
+                    <div class="option" data-correct="false" onclick="selectOption(26, 'b')">b) 1</div>
+                    <div class="option" data-correct="false" onclick="selectOption(26, 'c')">c) 3</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>27. Który stan skupienia ma najsilniejsze wiązania wodorowe?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(27, 'a')">a) Stały</div>
+                    <div class="option" data-correct="false" onclick="selectOption(27, 'b')">b) Ciekły</div>
+                    <div class="option" data-correct="false" onclick="selectOption(27, 'c')">c) Gazowy</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>28. Co jest wspólną cechą izotopów?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(28, 'a')">a) Ta sama liczba protonów</div>
+                    <div class="option" data-correct="false" onclick="selectOption(28, 'b')">b) Ta sama liczba neutronów</div>
+                    <div class="option" data-correct="false" onclick="selectOption(28, 'c')">c) Ta sama masa</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>29. Jakie siły działają między cząsteczkami helu?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(29, 'a')">a) Siły van der Waalsa</div>
+                    <div class="option" data-correct="false" onclick="selectOption(29, 'b')">b) Wiązania wodorowe</div>
+                    <div class="option" data-correct="false" onclick="selectOption(29, 'c')">c) Wiązania kowalencyjne</div>
+                </div>
+            </div>
+            <div class="question">
+                <h3>30. Co się dzieje z masą atomu, gdy zmienia się liczba neutronów?</h3>
+                <div class="options">
+                    <div class="option" data-correct="true" onclick="selectOption(30, 'a')">a) Zwiększa się lub zmniejsza</div>
+                    <div class="option" data-correct="false" onclick="selectOption(30, 'b')">b) Pozostaje taka sama</div>
+                    <div class="option" data-correct="false" onclick="selectOption(30, 'c')">c) Zawsze się zmniejsza</div>
+                </div>
+            </div>
+            <button onclick="submitTest()">Sprawdź odpowiedzi</button>
+        </div>
+    </div>
+    <div class="footer">
+        <p>Autor: Michał Mońka</p>
     </div>
 
     <script>
-        let score = 0;
-        let currentQ = 1;
+        function toggleContent(id) {
+            const content = document.getElementById(id);
+            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+        }
 
-        function checkAnswer(qid) {
-            const question = document.getElementById('q' + qid);
-            const options = question.querySelectorAll('.option');
-            const feedback = document.getElementById('feedback' + qid);
-            const selected = question.querySelector('input:checked');
+        function toggleDesc(id) {
+            const desc = document.getElementById(id + '-desc');
+            desc.style.display = desc.style.display === 'block' ? 'none' : 'block';
+        }
 
-            if (!selected) {
-                feedback.textContent = 'Wybierz opcję!';
-                feedback.className = 'feedback incorrect-feedback';
-                feedback.style.display = 'block';
-                return;
-            }
+        let selectedAnswers = {};
 
-            let isCorrect = false;
-            options.forEach(opt => {
-                opt.classList.remove('correct', 'incorrect');
-                const input = opt.querySelector('input');
-                if (input.checked) {
-                    const correct = opt.dataset.correct === 'True';
-                    if (correct) {
-                        opt.classList.add('correct');
-                        isCorrect = true;
-                        score++;
-                    } else {
-                        opt.classList.add('incorrect');
+        function selectOption(qid, option) {
+            selectedAnswers[qid] = option;
+            const options = document.querySelectorAll(`.question:nth-child(${qid}) .option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            const selectedOption = document.querySelector(`.question:nth-child(${qid}) .option:nth-child(${['a', 'b', 'c'].indexOf(option) + 1})`);
+            if (selectedOption) selectedOption.classList.add('selected');
+        }
+
+        function submitTest() {
+            for (let qid = 1; qid <= 30; qid++) {
+                const options = document.querySelectorAll(`.question:nth-child(${qid}) .option`);
+                options.forEach(option => {
+                    option.classList.remove('correct', 'incorrect', 'selected');
+                    const isCorrect = option.getAttribute('data-correct') === 'true';
+                    const userSelected = selectedAnswers[qid] === option.textContent.split(')')[0].toLowerCase();
+                    if (userSelected) {
+                        option.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    } else if (isCorrect) {
+                        option.classList.add('correct');
                     }
-                } else if (opt.dataset.correct === 'True') {
-                    opt.classList.add('correct');
-                }
-            });
-
-            feedback.textContent = isCorrect ? 'Poprawna odpowiedź!' : 'Niestety, błędna. Spróbuj ponownie!';
-            feedback.className = 'feedback ' + (isCorrect ? 'correct-feedback' : 'incorrect-feedback');
-            feedback.style.display = 'block';
-
-            currentQ++;
-            updateProgress();
-
-            if (currentQ > 20) {
-                document.getElementById('resultsBtn').style.display = 'block';
+                });
             }
-        }
-
-        function updateProgress() {
-            document.getElementById('progress').textContent = `Pytanie ${Math.min(currentQ, 21)} z 20`;
-        }
-
-        function showResults() {
-            alert(`Gratulacje! Twój wynik: ${score}/20 poprawnych odpowiedzi.`);
+            alert('Test sprawdzony! Poprawne odpowiedzi są zielone, błędne czerwone.');
         }
     </script>
 </body>
