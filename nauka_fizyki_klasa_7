@@ -35,32 +35,14 @@
             font-weight: bold;
             color: #333;
             opacity: 0;
-            background-color: rgba(255, 255, 255, 0.8); /* Lekkie tło dla lepszej czytelności */
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 5px;
             border-radius: 4px;
         }
-        .atom-schema .arrow-1 {
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: fadeInArrow 0.5s ease 0s forwards;
-        } /* Jądro - nad górą, centrowane */
-        .atom-schema .arrow-2 {
-            top: 70px;
-            left: 20%;
-            animation: fadeInArrow 0.5s ease 0.5s forwards;
-        } /* Protony - lewa strona, niżej */
-        .atom-schema .arrow-3 {
-            top: 70px;
-            right: 20%;
-            animation: fadeInArrow 0.5s ease 1s forwards;
-        } /* Neutrony - prawa strona, niżej */
-        .atom-schema .arrow-4 {
-            bottom: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: fadeInArrow 0.5s ease 1.5s forwards;
-        } /* Elektrony - pod spodem, centrowane */
+        .atom-schema .arrow-1 { top: -40px; left: 50%; transform: translateX(-50%); animation: fadeInArrow 0.5s ease 0s forwards; }
+        .atom-schema .arrow-2 { top: 70px; left: 20%; animation: fadeInArrow 0.5s ease 0.5s forwards; }
+        .atom-schema .arrow-3 { top: 70px; right: 20%; animation: fadeInArrow 0.5s ease 1s forwards; }
+        .atom-schema .arrow-4 { bottom: -40px; left: 50%; transform: translateX(-50%); animation: fadeInArrow 0.5s ease 1.5s forwards; }
         .water-schema { text-align: center; margin: 20px auto; position: relative; }
         .water-schema .atom-h { width: 20px; height: 20px; background: #ff1493; border-radius: 50%; display: inline-block; margin: 0 10px; }
         .water-schema .atom-o { width: 30px; height: 30px; background: #ff4500; border-radius: 50%; display: inline-block; }
@@ -69,7 +51,7 @@
         .water-schema .bond-2 { right: 25px; }
         .hydrogen-bond-schema { text-align: center; margin: 20px auto; position: relative; }
         .hydrogen-bond-schema .water-molecule-1 { width: 50px; height: 50px; background: #f0f0f0; border: 2px dashed #ff4500; border-radius: 50%; display: inline-block; position: relative; margin: 0 20px; }
-        .hydrogen-bond-schema .water-molecule-2 { width: 50px; height: 50px; background: #f0f0f0; border: 2px dashed #ff4500; border-radius: 50%; display: inline-block; position: relative; }
+        .hydrogen-bond-schema .water-molecule-2 { width: 50px; height: 50px; background: #f0f0f5; border: 2px dashed #ff4500; border-radius: 50%; display: inline-block; position: relative; }
         .hydrogen-bond-schema .h-bond { width: 40px; height: 2px; background: #00ced1; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(30deg); }
         .hydrogen-bond-schema .h-bond-2 { width: 40px; height: 2px; background: #00ced1; position: absolute; top: 50%; right: -20px; transform: translateY(-50%) rotate(-30deg); }
         .states-visual { text-align: center; margin: 20px 0; }
@@ -87,9 +69,12 @@
         .option.selected { background: #ffff99; border-color: #ffeb3b; transition: all 0.3s ease; }
         .option.correct { background: #d4edda; color: #155724; border: 2px solid #28a745; animation: pulse 0.5s ease; }
         .option.incorrect { background: #f8d7da; color: #721c24; border: 2px solid #dc3545; animation: pulse 0.5s ease; }
+        .explanation { display: none; margin-top: 5px; padding: 5px; background: #f1f3f5; border-radius: 4px; color: #721c24; font-size: 0.9em; }
+        .option.incorrect + .explanation { display: block; }
         button { background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; transition: background 0.3s ease; }
         button:hover { background: #218838; transform: scale(1.05); }
         .footer { text-align: center; margin-top: 20px; font-size: 0.9em; color: #666; }
+        #score { margin-top: 10px; font-weight: bold; color: #28a745; }
 
         /* Animacje */
         @keyframes fadeIn { to { opacity: 1; } }
@@ -214,244 +199,275 @@
             <div class="question">
                 <h3>1. Z czego składa się jądro atomu?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(1, 'a')">a) Protony i neutrony</div>
-                    <div class="option" data-correct="false" onclick="selectOption(1, 'b')">b) Tylko elektrony</div>
-                    <div class="option" data-correct="false" onclick="selectOption(1, 'c')">c) Tlen i wodór</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(1, 'a')">a) Protony</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(1, 'b')">b) Neutrony</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(1, 'c')">c) Elektrony</div>
                 </div>
+                <div class="explanation">Elektrony znajdują się na orbitach wokół jądra, a nie w jego wnętrzu. Jądro składa się wyłącznie z protonów i neutronów, które są kluczowe dla struktury atomu.</div>
             </div>
             <div class="question">
-                <h3>2. Która cząsteczka to para wodna?</h3>
+                <h3>2. Które pierwiastki tworzą cząsteczkę wody?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(2, 'a')">a) H₂O (w gazie)</div>
-                    <div class="option" data-correct="false" onclick="selectOption(2, 'b')">b) O₂</div>
-                    <div class="option" data-correct="false" onclick="selectOption(2, 'c')">c) CO₂</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(2, 'a')">a) Węgiel</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(2, 'b')">b) Tlen</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(2, 'c')">c) Wodór</div>
                 </div>
+                <div class="explanation">Woda (H₂O) składa się tylko z atomów wodoru i tlenu. Węgiel jest obecny w innych związkach, np. dwutlenku węgla (CO₂).</div>
             </div>
             <div class="question">
-                <h3>3. Co powoduje, że lód jest lżejszy od wody?</h3>
+                <h3>3. Co sprawia, że lód unosi się na wodzie?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(3, 'a')">a) Wiązania wodorowe</div>
-                    <div class="option" data-correct="false" onclick="selectOption(3, 'b')">b) Wysoka temperatura</div>
-                    <div class="option" data-correct="false" onclick="selectOption(3, 'c')">c) Brak grawitacji</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(3, 'a')">a) Wysoka temperatura</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(3, 'b')">b) Wiązania wodorowe</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(3, 'c')">c) Struktura krystaliczna</div>
                 </div>
+                <div class="explanation">Wysoka temperatura topi lód, zamiast go podtrzymywać. Wiązania wodorowe i struktura krystaliczna tworzą mniej gęstą strukturę lodu, co pozwala mu unosić się na wodzie.</div>
             </div>
             <div class="question">
                 <h3>4. Co obniża napięcie powierzchniowe wody?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(4, 'a')">a) Detergent</div>
-                    <div class="option" data-correct="false" onclick="selectOption(4, 'b')">b) Cukier</div>
-                    <div class="option" data-correct="false" onclick="selectOption(4, 'c')">c) Sól</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(4, 'a')">a) Sól</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(4, 'b')">b) Detergent</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(4, 'c')">c) Mydło</div>
                 </div>
+                <div class="explanation">Sól zwiększa napięcie powierzchniowe wody, podczas gdy detergenty i mydło, jako substancje powierzchniowo czynne, je obniżają, rozbijając strukturę powierzchni.</div>
             </div>
             <div class="question">
-                <h3>5. Który stan skupienia ma największy ruch cząsteczek?</h3>
+                <h3>5. W których stanach skupienia cząsteczki się poruszają?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(5, 'a')">a) Gazowy</div>
-                    <div class="option" data-correct="false" onclick="selectOption(5, 'b')">b) Ciekły</div>
-                    <div class="option" data-correct="false" onclick="selectOption(5, 'c')">c) Stały</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(5, 'a')">a) Ciekły</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(5, 'b')">b) Stały (brak ruchu)</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(5, 'c')">c) Gazowy</div>
                 </div>
+                <div class="explanation">W ciele stałym cząsteczki wibrują na swoich miejscach, ale nie przemieszczają się jak w cieczach czy gazach, gdzie ruch jest bardziej swobodny.</div>
             </div>
             <div class="question">
-                <h3>6. Jaki ładunek mają protony?</h3>
+                <h3>6. Które cząstki posiadają ładunek elektryczny?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(6, 'a')">a) Dodatni</div>
-                    <div class="option" data-correct="false" onclick="selectOption(6, 'b')">b) Ujemny</div>
-                    <div class="option" data-correct="false" onclick="selectOption(6, 'c')">c) Brak ładunku</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(6, 'a')">a) Protony</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(6, 'b')">c) Neutrony</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(6, 'c')">b) Elektrony</div>
                 </div>
+                <div class="explanation">Neutrony są obojętne, nie posiadają ładunku. Protony mają ładunek dodatni, a elektrony ujemny, co pozwala na równowagę w atomie.</div>
             </div>
             <div class="question">
-                <h3>7. Jaki ładunek mają neutrony?</h3>
+                <h3>7. Gdzie znajdują się protony i neutrony?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(7, 'a')">a) Brak ładunku</div>
-                    <div class="option" data-correct="false" onclick="selectOption(7, 'b')">b) Dodatni</div>
-                    <div class="option" data-correct="false" onclick="selectOption(7, 'c')">c) Ujemny</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(7, 'a')">a) Wokół jądra</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(7, 'b')">b) W jądrze</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(7, 'c')">c) Na zewnątrz atomu</div>
                 </div>
+                <div class="explanation">Protony i neutrony są zlokalizowane wyłącznie w jądrze atomu, podczas gdy elektrony krążą wokół niego.</div>
             </div>
             <div class="question">
-                <h3>8. Gdzie znajdują się protony i neutrony?</h3>
+                <h3>8. Co stabilizuje jądro atomu?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(8, 'a')">a) W jądrze</div>
-                    <div class="option" data-correct="false" onclick="selectOption(8, 'b')">b) Wokół jądra</div>
-                    <div class="option" data-correct="false" onclick="selectOption(8, 'c')">c) Na zewnątrz atomu</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(8, 'a')">a) Siły jądrowe</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(8, 'b')">b) Elektrony</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(8, 'c')">c) Neutrony</div>
                 </div>
+                <div class="explanation">Elektrony znajdują się poza jądrem i nie wpływają na jego stabilność. Stabilność jądra zależy od sił jądrowych i równowagi między protonami a neutronami.</div>
             </div>
             <div class="question">
-                <h3>9. Ile protonów ma atom wodoru?</h3>
+                <h3>9. Co określa rodzaj atomu (pierwiastek)?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(9, 'a')">a) 1</div>
-                    <div class="option" data-correct="false" onclick="selectOption(9, 'b')">b) 2</div>
-                    <div class="option" data-correct="false" onclick="selectOption(9, 'c')">c) 8</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(9, 'a')">a) Liczba neutronów</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(9, 'b')">b) Liczba elektronów</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(9, 'c')">c) Liczba protonów</div>
                 </div>
+                <div class="explanation">Liczba protonów w jądrze określa, jaki to pierwiastek (np. wodór ma 1 proton, tlen 8). Neutrony i elektrony mogą się różnić, np. w izotopach.</div>
             </div>
             <div class="question">
-                <h3>10. Co stabilizuje jądro atomu?</h3>
+                <h3>10. Co wpływa na masę atomu?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(10, 'a')">a) Neutrony</div>
-                    <div class="option" data-correct="false" onclick="selectOption(10, 'b')">b) Elektrony</div>
-                    <div class="option" data-correct="false" onclick="selectOption(10, 'c')">c) Protony</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(10, 'a')">a) Neutrony</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(10, 'b')">b) Elektrony</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(10, 'c')">c) Protony</div>
                 </div>
+                <div class="explanation">Elektrony mają tak małą masę (około 1/1836 masy protonu), że nie wnoszą znaczącego wkładu do masy atomu – kluczowe są protony i neutrony.</div>
             </div>
             <div class="question">
-                <h3>11. Jaki ładunek mają elektrony?</h3>
+                <h3>11. Które cząstki krążą wokół jądra?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(11, 'a')">a) Ujemny</div>
-                    <div class="option" data-correct="false" onclick="selectOption(11, 'b')">b) Dodatni</div>
-                    <div class="option" data-correct="false" onclick="selectOption(11, 'c')">c) Brak ładunku</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(11, 'a')">a) Neutrony</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(11, 'b')">b) Protony</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(11, 'c')">c) Elektrony</div>
                 </div>
+                <div class="explanation">Protony i neutrony znajdują się w jądrze, a elektrony poruszają się na orbitach wokół jądra, tworząc powłoki elektronowe.</div>
             </div>
             <div class="question">
-                <h3>12. Ile protonów ma atom tlenu?</h3>
+                <h3>12. Co odróżnia izotopy tego samego pierwiastka?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(12, 'a')">a) 8</div>
-                    <div class="option" data-correct="false" onclick="selectOption(12, 'b')">b) 1</div>
-                    <div class="option" data-correct="false" onclick="selectOption(12, 'c')">c) 6</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(12, 'a')">c) Liczba protonów</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(12, 'b')">b) Liczba neutronów</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(12, 'c')">a) Masa atomowa</div>
                 </div>
+                <div class="explanation">Liczba protonów jest stała dla danego pierwiastka. Izotopy różnią się liczbą neutronów, co zmienia masę atomową, np. wodór-1 vs. wodór-2.</div>
             </div>
             <div class="question">
-                <h3>13. Co różni izotopy tego samego pierwiastka?</h3>
+                <h3>13. Jakie siły działają między cząsteczkami wody?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(13, 'a')">a) Liczba neutronów</div>
-                    <div class="option" data-correct="false" onclick="selectOption(13, 'b')">b) Liczba protonów</div>
-                    <div class="option" data-correct="false" onclick="selectOption(13, 'c')">c) Liczba elektronów</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(13, 'a')">a) Wiązania wodorowe</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(13, 'b')">c) Wiązania kowalencyjne</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(13, 'c')">b) Siły van der Waalsa</div>
                 </div>
+                <div class="explanation">Wiązania kowalencyjne łączą atomy w obrębie jednej cząsteczki H₂O, a nie między cząsteczkami – między nimi działają wiązania wodorowe i słabsze siły van der Waalsa.</div>
             </div>
             <div class="question">
-                <h3>14. Dlaczego protony się odpychają?</h3>
+                <h3>14. Na co wpływa temperatura wrzenia wody?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(14, 'a')">a) Mają taki sam ładunek</div>
-                    <div class="option" data-correct="false" onclick="selectOption(14, 'b')">b) Są za duże</div>
-                    <div class="option" data-correct="false" onclick="selectOption(14, 'c')">c) Brak neutronów</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(14, 'a')">c) Liczba elektronów</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(14, 'b')">b) Ciśnienie atmosferyczne</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(14, 'c')">a) Wiązania wodorowe</div>
                 </div>
+                <div class="explanation">Liczba elektronów nie wpływa na temperaturę wrzenia – kluczowe są wiązania wodorowe (silne przyciąganie między cząsteczkami) i ciśnienie atmosferyczne.</div>
             </div>
             <div class="question">
-                <h3>15. Gdzie krążą elektrony?</h3>
+                <h3>15. Które stany skupienia mają stały kształt?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(15, 'a')">a) Wokół jądra</div>
-                    <div class="option" data-correct="false" onclick="selectOption(15, 'b')">b) W jądrze</div>
-                    <div class="option" data-correct="false" onclick="selectOption(15, 'c')">c) Na zewnątrz atomu</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(15, 'a')">a) Gazowy</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(15, 'b')">b) Ciekły</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(15, 'c')">c) Stały</div>
                 </div>
+                <div class="explanation">Tylko ciała stałe mają stały kształt dzięki silnym wiązaniom między cząsteczkami. Ciekłe i gazowe dostosowują się do naczynia.</div>
             </div>
             <div class="question">
-                <h3>16. Co określa rodzaj atomu?</h3>
+                <h3>16. Co określa wagę przedmiotu?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(16, 'a')">a) Liczba protonów</div>
-                    <div class="option" data-correct="false" onclick="selectOption(16, 'b')">b) Liczba neutronów</div>
-                    <div class="option" data-correct="false" onclick="selectOption(16, 'c')">c) Liczba elektronów</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(16, 'a')">c) Masa</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(16, 'b')">b) Grawitacja</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(16, 'c')">a) Siła ciężkości</div>
                 </div>
+                <div class="explanation">Masa jest stała i nie zależy od miejsca, ale waga (siła ciężkości) zmienia się z grawitacją, np. na Księżycu jest mniejsza.</div>
             </div>
             <div class="question">
-                <h3>17. Czy neutrony mają masę?</h3>
+                <h3>17. Jakie pierwiastki wchodzą w skład cząsteczki wody?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(17, 'a')">a) Tak</div>
-                    <div class="option" data-correct="false" onclick="selectOption(17, 'b')">b) Nie</div>
-                    <div class="option" data-correct="false" onclick="selectOption(17, 'c')">c) Tylko w gazach</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(17, 'a')">a) Węgiel</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(17, 'b')">b) Wodór</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(17, 'c')">c) Tlen</div>
                 </div>
+                <div class="explanation">Woda (H₂O) zawiera tylko wodór i tlen. Węgiel występuje w innych związkach, np. w dwutlenku węgla (CO₂).</div>
             </div>
             <div class="question">
-                <h3>18. Co trzyma jądro razem mimo odpychania protonów?</h3>
+                <h3>18. Co stabilizuje strukturę lodu?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(18, 'a')">a) Siły jądrowe</div>
-                    <div class="option" data-correct="false" onclick="selectOption(18, 'b')">b) Elektrony</div>
-                    <div class="option" data-correct="false" onclick="selectOption(18, 'c')">c) Grawitacja</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(18, 'a')">a) Wysoka temperatura</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(18, 'b')">b) Sieć krystaliczna</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(18, 'c')">c) Wiązania wodorowe</div>
                 </div>
+                <div class="explanation">Wysoka temperatura powoduje topnienie lodu. Struktura krystaliczna i wiązania wodorowe tworzą stabilną, mniej gęstą formę lodu.</div>
             </div>
             <div class="question">
-                <h3>19. Ile neutronów może mieć atom wodoru?</h3>
+                <h3>19. Które cząstki mają podobną masę?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(19, 'a')">a) 0 lub 1</div>
-                    <div class="option" data-correct="false" onclick="selectOption(19, 'b')">b) 8</div>
-                    <div class="option" data-correct="false" onclick="selectOption(19, 'c')">c) 2</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(19, 'a')">a) Protony</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(19, 'b')">c) Elektrony</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(19, 'c')">b) Neutrony</div>
                 </div>
+                <div class="explanation">Elektrony są znacznie lżejsze (masa ≈ 1/1836 protonu). Protony i neutrony mają bardzo zbliżoną masę, co jest podstawą ich roli w jądrze.</div>
             </div>
             <div class="question">
-                <h3>20. Co się dzieje, gdy atom traci elektron?</h3>
+                <h3>20. Co pozwala owadom chodzić po wodzie?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(20, 'a')">a) Staje się jonem dodatnim</div>
-                    <div class="option" data-correct="false" onclick="selectOption(20, 'b')">b) Staje się lżejszy</div>
-                    <div class="option" data-correct="false" onclick="selectOption(20, 'c')">c) Traci protony</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(20, 'a')">a) Wysoka temperatura</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(20, 'b')">b) Napięcie powierzchniowe</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(20, 'c')">c) Lekka waga</div>
                 </div>
+                <div class="explanation">Wysoka temperatura osłabia napięcie powierzchniowe. Owady, jak stonogi wodne, korzystają z napięcia powierzchniowego i swojej małej masy.</div>
             </div>
             <div class="question">
-                <h3>21. Który izotop wodoru ma 1 neutron?</h3>
+                <h3>21. Które właściwości zależą od grawitacji?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(21, 'a')">a) Wodór-2</div>
-                    <div class="option" data-correct="false" onclick="selectOption(21, 'b')">b) Wodór-1</div>
-                    <div class="option" data-correct="false" onclick="selectOption(21, 'c')">c) Węgiel-14</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(21, 'a')">a) Siła ciężkości</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(21, 'b')">c) Masa</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(21, 'c')">b) Waga</div>
                 </div>
+                <div class="explanation">Masa jest stała i nie zmienia się z grawitacją. Waga i siła ciężkości zależą od siły grawitacji, np. różnią się na Ziemi i Księżycu.</div>
             </div>
             <div class="question">
-                <h3>22. Ile neutronów ma węgiel-14?</h3>
+                <h3>22. Co wpływa na ruch cząsteczek w gazach?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(22, 'a')">a) 8</div>
-                    <div class="option" data-correct="false" onclick="selectOption(22, 'b')">b) 6</div>
-                    <div class="option" data-correct="false" onclick="selectOption(22, 'c')">c) 12</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(22, 'a')">a) Energia kinetyczna</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(22, 'b')">c) Grawitacja</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(22, 'c')">b) Temperatura</div>
                 </div>
+                <div class="explanation">Grawitacja ma minimalny wpływ na ruch cząsteczek gazu. Ruch zależy od temperatury (energii cieplnej) i energii kinetycznej cząsteczek.</div>
             </div>
             <div class="question">
-                <h3>23. Co łączy cząsteczki wody w lodzie?</h3>
+                <h3>23. Jakie izotopy wodoru są znane?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(23, 'a')">a) Wiązania wodorowe</div>
-                    <div class="option" data-correct="false" onclick="selectOption(23, 'b')">b) Wiązania kowalencyjne</div>
-                    <div class="option" data-correct="false" onclick="selectOption(23, 'c')">c) Siły grawitacyjne</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(23, 'a')">a) Wodór-1</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(23, 'b')">c) Węgiel-14</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(23, 'c')">b) Wodór-2</div>
                 </div>
+                <div class="explanation">Węgiel-14 to izotop węgla, a nie wodoru. Wodór ma izotopy Wodór-1 (prot) i Wodór-2 (deuter).</div>
             </div>
             <div class="question">
-                <h3>24. Jaki pierwiastek ma izotopy węgiel-12 i węgiel-14?</h3>
+                <h3>24. Co łączy atomy w cząsteczce wody?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(24, 'a')">a) Węgiel</div>
-                    <div class="option" data-correct="false" onclick="selectOption(24, 'b')">b) Wodór</div>
-                    <div class="option" data-correct="false" onclick="selectOption(24, 'c')">c) Tlen</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(24, 'a')">a) Wiązania kowalencyjne</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(24, 'b')">c) Wiązania wodorowe</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(24, 'c')">b) Udział elektronów</div>
                 </div>
+                <div class="explanation">Wiązania wodorowe działają między cząsteczkami wody, a nie wewnątrz niej. Wewnątrz cząsteczki H₂O atomy są połączone wiązaniami kowalencyjnymi z udziałem elektronów.</div>
             </div>
             <div class="question">
-                <h3>25. Co powoduje, że woda ma wysoką temperaturę wrzenia?</h3>
+                <h3>25. W których stanach skupienia cząsteczki są blisko siebie?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(25, 'a')">a) Wiązania wodorowe</div>
-                    <div class="option" data-correct="false" onclick="selectOption(25, 'b')">b) Brak neutronów</div>
-                    <div class="option" data-correct="false" onclick="selectOption(25, 'c')">c) Duża liczba protonów</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(25, 'a')">a) Stały</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(25, 'b')">c) Gazowy</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(25, 'c')">b) Ciekły</div>
                 </div>
+                <div class="explanation">W gazie cząsteczki są rozproszone i daleko od siebie. W stanach stałym i ciekłym są blisko, co wpływa na ich właściwości.</div>
             </div>
             <div class="question">
-                <h3>26. Ile atomów wodoru jest w cząsteczce wody?</h3>
+                <h3>26. Co wpływa na stabilność jądra?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(26, 'a')">a) 2</div>
-                    <div class="option" data-correct="false" onclick="selectOption(26, 'b')">b) 1</div>
-                    <div class="option" data-correct="false" onclick="selectOption(26, 'c')">c) 3</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(26, 'a')">a) Siły jądrowe</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(26, 'b')">b) Elektrony</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(26, 'c')">c) Liczba neutronów</div>
                 </div>
+                <div class="explanation">Elektrony znajdują się poza jądrem i nie mają wpływu na jego stabilność. Kluczowe są siły jądrowe i odpowiednia liczba neutronów.</div>
             </div>
             <div class="question">
-                <h3>27. Który stan skupienia ma najsilniejsze wiązania wodorowe?</h3>
+                <h3>27. Które właściwości zależą od izotopów?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(27, 'a')">a) Stały</div>
-                    <div class="option" data-correct="false" onclick="selectOption(27, 'b')">b) Ciekły</div>
-                    <div class="option" data-correct="false" onclick="selectOption(27, 'c')">c) Gazowy</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(27, 'a')">a) Stabilność</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(27, 'b')">c) Ładunek</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(27, 'c')">b) Masa atomowa</div>
                 </div>
+                <div class="explanation">Ładunek atomu zależy od równowagi protonów i elektronów, która jest stała w izotopach. Izotopy różnią się masą i stabilnością.</div>
             </div>
             <div class="question">
-                <h3>28. Co jest wspólną cechą izotopów?</h3>
+                <h3>28. Co umożliwia powstawanie wiązań wodorowych?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(28, 'a')">a) Ta sama liczba protonów</div>
-                    <div class="option" data-correct="false" onclick="selectOption(28, 'b')">b) Ta sama liczba neutronów</div>
-                    <div class="option" data-correct="false" onclick="selectOption(28, 'c')">c) Ta sama masa</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(28, 'a')">a) Wysoka temperatura</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(28, 'b')">b) Polaryzacja cząsteczek</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(28, 'c')">c) Obecność wodoru i tlenu</div>
                 </div>
+                <div class="explanation">Wysoka temperatura osłabia wiązania wodorowe. Powstają one dzięki polaryzacji (np. w wodzie) i obecności wodoru z tlenem lub innymi atomami elektroujemnymi.</div>
             </div>
             <div class="question">
-                <h3>29. Jakie siły działają między cząsteczkami helu?</h3>
+                <h3>29. Jakie siły działają w gazach szlachetnych?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(29, 'a')">a) Siły van der Waalsa</div>
-                    <div class="option" data-correct="false" onclick="selectOption(29, 'b')">b) Wiązania wodorowe</div>
-                    <div class="option" data-correct="false" onclick="selectOption(29, 'c')">c) Wiązania kowalencyjne</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(29, 'a')">a) Wiązania wodorowe</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(29, 'b')">b) Wiązania kowalencyjne</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(29, 'c')">c) Siły van der Waalsa</div>
                 </div>
+                <div class="explanation">Gazy szlachetne (np. hel, neon) są obojętne chemicznie i nie tworzą wiązań wodorowych ani kowalencyjnych – działają tylko słabe siły van der Waalsa.</div>
             </div>
             <div class="question">
-                <h3>30. Co się dzieje z masą atomu, gdy zmienia się liczba neutronów?</h3>
+                <h3>30. Co zmienia się, gdy atom staje się jonem?</h3>
                 <div class="options">
-                    <div class="option" data-correct="true" onclick="selectOption(30, 'a')">a) Zwiększa się lub zmniejsza</div>
-                    <div class="option" data-correct="false" onclick="selectOption(30, 'b')">b) Pozostaje taka sama</div>
-                    <div class="option" data-correct="false" onclick="selectOption(30, 'c')">c) Zawsze się zmniejsza</div>
+                    <div class="option" data-correct="false" onclick="toggleSelection(30, 'a')">a) Liczba protonów</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(30, 'b')">b) Ładunek</div>
+                    <div class="option" data-correct="true" onclick="toggleSelection(30, 'c')">c) Liczba elektronów</div>
                 </div>
+                <div class="explanation">Liczba protonów pozostaje stała, bo określa pierwiastek. Jon powstaje, gdy atom zyskuje lub traci elektrony, co zmienia jego ładunek.</div>
             </div>
             <button onclick="submitTest()">Sprawdź odpowiedzi</button>
+            <div id="score"></div>
         </div>
     </div>
     <div class="footer">
@@ -471,29 +487,49 @@
 
         let selectedAnswers = {};
 
-        function selectOption(qid, option) {
-            selectedAnswers[qid] = option;
-            const options = document.querySelectorAll(`.question:nth-child(${qid}) .option`);
-            options.forEach(opt => opt.classList.remove('selected'));
+        function toggleSelection(qid, option) {
+            selectedAnswers[qid] = selectedAnswers[qid] || [];
+            const index = selectedAnswers[qid].indexOf(option);
+            if (index === -1) {
+                selectedAnswers[qid].push(option);
+            } else {
+                selectedAnswers[qid].splice(index, 1);
+            }
             const selectedOption = document.querySelector(`.question:nth-child(${qid}) .option:nth-child(${['a', 'b', 'c'].indexOf(option) + 1})`);
-            if (selectedOption) selectedOption.classList.add('selected');
+            selectedOption.classList.toggle('selected');
         }
 
         function submitTest() {
-            for (let qid = 1; qid <= 30; qid++) {
+            let score = 0;
+            const totalQuestions = 30;
+
+            for (let qid = 1; qid <= totalQuestions; qid++) {
                 const options = document.querySelectorAll(`.question:nth-child(${qid}) .option`);
+                const correctAnswers = Array.from(options).filter(opt => opt.getAttribute('data-correct') === 'true').map(opt => opt.textContent.split(')')[0].toLowerCase());
+                const userAnswers = selectedAnswers[qid] || [];
+
                 options.forEach(option => {
                     option.classList.remove('correct', 'incorrect', 'selected');
-                    const isCorrect = option.getAttribute('data-correct') === 'true';
-                    const userSelected = selectedAnswers[qid] === option.textContent.split(')')[0].toLowerCase();
+                    const optionLetter = option.textContent.split(')')[0].toLowerCase();
+                    const isCorrect = correctAnswers.includes(optionLetter);
+                    const userSelected = userAnswers.includes(optionLetter);
+
                     if (userSelected) {
-                        option.classList.add(isCorrect ? 'correct' : 'incorrect');
+                        if (isCorrect && userAnswers.length === correctAnswers.length && userAnswers.every(ans => correctAnswers.includes(ans))) {
+                            option.classList.add('correct');
+                            if (!option.classList.contains('incorrect')) score++; // Punkt za pełne poprawne zaznaczenie
+                        } else {
+                            option.classList.add('incorrect');
+                        }
                     } else if (isCorrect) {
                         option.classList.add('correct');
                     }
                 });
             }
-            alert('Test sprawdzony! Poprawne odpowiedzi są zielone, błędne czerwone.');
+
+            // Wyświetl wynik
+            const scoreElement = document.getElementById('score');
+            scoreElement.textContent = `Wynik: ${score} / ${totalQuestions}`;
         }
     </script>
 </body>
