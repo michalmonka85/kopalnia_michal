@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test o Cząsteczkach</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #4a4a4a; }
+        .progress { text-align: center; margin-bottom: 20px; font-weight: bold; color: #007bff; }
+        .question { background: #f9f9f9; padding: 20px; margin-bottom: 20px; border-radius: 8px; border-left: 4px solid #007bff; }
+        .question h3 { color: #333; margin-bottom: 15px; }
+        .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin-top: 15px; }
+        .option { background: #e7f3ff; border: 2px solid #007bff; padding: 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s; text-align: center; }
+        .option:hover { background: #d4edda; border-color: #28a745; }
+        .option.correct { background: #d4edda; border-color: #28a745; }
+        .option.incorrect { background: #f8d7da; border-color: #dc3545; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; display: block; margin: 10px auto 0; }
+        button:hover { background: #0056b3; }
+        .feedback { margin-top: 10px; padding: 10px; border-radius: 4px; display: none; text-align: center; font-weight: bold; }
+        .correct-feedback { background: #d4edda; color: #155724; }
+        .incorrect-feedback { background: #f8d7da; color: #721c24; }
+        #resultsBtn { background: #28a745; margin-top: 20px; }
+        #resultsBtn:hover { background: #218838; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test o Cząsteczkach</h1>
+        <div class="progress" id="progress">Pytanie 1 z 20</div>
+        <form id="quizForm">
+            <!-- Pytanie 1 -->
+            <div class="question" id="q1">
+                <h3>1. Co to jest cząsteczka?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="1">
+                        <input type="radio" name="q1" value="a" style="display: none;"> a) Zespół dwóch lub więcej atomów połączonych wiązaniami chemicznymi
+                    </label>
+                    <label class="option" data-correct="False" data-qid="1">
+                        <input type="radio" name="q1" value="b" style="display: none;"> b) Pojedynczy atom
+                    </label>
+                    <label class="option" data-correct="False" data-qid="1">
+                        <input type="radio" name="q1" value="c" style="display: none;"> c) Mieszanina pierwiastków
+                    </label>
+                    <label class="option" data-correct="False" data-qid="1">
+                        <input type="radio" name="q1" value="d" style="display: none;"> d) Substancja bez struktury
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(1)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback1"></div>
+            </div>
+
+            <!-- Pytanie 2 -->
+            <div class="question" id="q2">
+                <h3>2. Która z poniższych jest cząsteczką wody?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="2">
+                        <input type="radio" name="q2" value="a" style="display: none;"> a) H₂O
+                    </label>
+                    <label class="option" data-correct="False" data-qid="2">
+                        <input type="radio" name="q2" value="b" style="display: none;"> b) O₂
+                    </label>
+                    <label class="option" data-correct="False" data-qid="2">
+                        <input type="radio" name="q2" value="c" style="display: none;"> c) CO₂
+                    </label>
+                    <label class="option" data-correct="False" data-qid="2">
+                        <input type="radio" name="q2" value="d" style="display: none;"> d) N₂
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(2)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback2"></div>
+            </div>
+
+            <!-- Pytanie 3 -->
+            <div class="question" id="q3">
+                <h3>3. Jakie wiązanie łączy atomy w cząsteczce tlenu (O₂)?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="3">
+                        <input type="radio" name="q3" value="a" style="display: none;"> a) Wiązanie podwójne
+                    </label>
+                    <label class="option" data-correct="False" data-qid="3">
+                        <input type="radio" name="q3" value="b" style="display: none;"> b) Wiązanie pojedyncze
+                    </label>
+                    <label class="option" data-correct="False" data-qid="3">
+                        <input type="radio" name="q3" value="c" style="display: none;"> c) Wiązanie potrójne
+                    </label>
+                    <label class="option" data-correct="False" data-qid="3">
+                        <input type="radio" name="q3" value="d" style="display: none;"> d) Wiązanie jonowe
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(3)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback3"></div>
+            </div>
+
+            <!-- Pytanie 4 -->
+            <div class="question" id="q4">
+                <h3>4. Ile atomów wodoru znajduje się w cząsteczce metanu (CH₄)?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="4">
+                        <input type="radio" name="q4" value="a" style="display: none;"> a) 4
+                    </label>
+                    <label class="option" data-correct="False" data-qid="4">
+                        <input type="radio" name="q4" value="b" style="display: none;"> b) 2
+                    </label>
+                    <label class="option" data-correct="False" data-qid="4">
+                        <input type="radio" name="q4" value="c" style="display: none;"> c) 3
+                    </label>
+                    <label class="option" data-correct="False" data-qid="4">
+                        <input type="radio" name="q4" value="d" style="display: none;"> d) 1
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(4)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback4"></div>
+            </div>
+
+            <!-- Pytanie 5 -->
+            <div class="question" id="q5">
+                <h3>5. Która cząsteczka jest dwutlenkiem węgla?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="5">
+                        <input type="radio" name="q5" value="a" style="display: none;"> a) CO₂
+                    </label>
+                    <label class="option" data-correct="False" data-qid="5">
+                        <input type="radio" name="q5" value="b" style="display: none;"> b) CO
+                    </label>
+                    <label class="option" data-correct="False" data-qid="5">
+                        <input type="radio" name="q5" value="c" style="display: none;"> c) CH₄
+                    </label>
+                    <label class="option" data-correct="False" data-qid="5">
+                        <input type="radio" name="q5" value="d" style="display: none;"> d) H₂O
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(5)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback5"></div>
+            </div>
+
+            <!-- Pytanie 6 -->
+            <div class="question" id="q6">
+                <h3>6. Jaki typ wiązania występuje w cząsteczce chlorowodoru (HCl)?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="6">
+                        <input type="radio" name="q6" value="a" style="display: none;"> a) Wiązanie kowalencyjne spolaryzowane
+                    </label>
+                    <label class="option" data-correct="False" data-qid="6">
+                        <input type="radio" name="q6" value="b" style="display: none;"> b) Wiązanie jonowe
+                    </label>
+                    <label class="option" data-correct="False" data-qid="6">
+                        <input type="radio" name="q6" value="c" style="display: none;"> c) Wiązanie wodorowe
+                    </label>
+                    <label class="option" data-correct="False" data-qid="6">
+                        <input type="radio" name="q6" value="d" style="display: none;"> d) Wiązanie metaliczne
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(6)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback6"></div>
+            </div>
+
+            <!-- Pytanie 7 -->
+            <div class="question" id="q7">
+                <h3>7. Która cząsteczka ma kształt liniowy?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="7">
+                        <input type="radio" name="q7" value="a" style="display: none;"> a) CO₂
+                    </label>
+                    <label class="option" data-correct="False" data-qid="7">
+                        <input type="radio" name="q7" value="b" style="display: none;"> b) H₂O
+                    </label>
+                    <label class="option" data-correct="False" data-qid="7">
+                        <input type="radio" name="q7" value="c" style="display: none;"> c) NH₃
+                    </label>
+                    <label class="option" data-correct="False" data-qid="7">
+                        <input type="radio" name="q7" value="d" style="display: none;"> d) CH₄
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(7)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback7"></div>
+            </div>
+
+            <!-- Pytanie 8 -->
+            <div class="question" id="q8">
+                <h3>8. Ile wiązań wodorowych może utworzyć cząsteczka wody?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="8">
+                        <input type="radio" name="q8" value="a" style="display: none;"> a) 2
+                    </label>
+                    <label class="option" data-correct="False" data-qid="8">
+                        <input type="radio" name="q8" value="b" style="display: none;"> b) 1
+                    </label>
+                    <label class="option" data-correct="False" data-qid="8">
+                        <input type="radio" name="q8" value="c" style="display: none;"> c) 3
+                    </label>
+                    <label class="option" data-correct="False" data-qid="8">
+                        <input type="radio" name="q8" value="d" style="display: none;"> d) 4
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(8)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback8"></div>
+            </div>
+
+            <!-- Pytanie 9 -->
+            <div class="question" id="q9">
+                <h3>9. Który pierwiastek nie tworzy cząsteczek dwuatomowych w normalnych warunkach?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="9">
+                        <input type="radio" name="q9" value="a" style="display: none;"> a) Hel (He)
+                    </label>
+                    <label class="option" data-correct="False" data-qid="9">
+                        <input type="radio" name="q9" value="b" style="display: none;"> b) Wodor (H₂)
+                    </label>
+                    <label class="option" data-correct="False" data-qid="9">
+                        <input type="radio" name="q9" value="c" style="display: none;"> c) Tlen (O₂)
+                    </label>
+                    <label class="option" data-correct="False" data-qid="9">
+                        <input type="radio" name="q9" value="d" style="display: none;"> d) Azot (N₂)
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(9)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback9"></div>
+            </div>
+
+            <!-- Pytanie 10 -->
+            <div class="question" id="q10">
+                <h3>10. Jaki jest kąt wiązania w cząsteczce wody (H₂O)?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="10">
+                        <input type="radio" name="q10" value="a" style="display: none;"> a) 104,5°
+                    </label>
+                    <label class="option" data-correct="False" data-qid="10">
+                        <input type="radio" name="q10" value="b" style="display: none;"> b) 90°
+                    </label>
+                    <label class="option" data-correct="False" data-qid="10">
+                        <input type="radio" name="q10" value="c" style="display: none;"> c) 120°
+                    </label>
+                    <label class="option" data-correct="False" data-qid="10">
+                        <input type="radio" name="q10" value="d" style="display: none;"> d) 180°
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(10)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback10"></div>
+            </div>
+
+            <!-- Pytanie 11 -->
+            <div class="question" id="q11">
+                <h3>11. Która cząsteczka ma strukturę tetrahedralną?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="11">
+                        <input type="radio" name="q11" value="a" style="display: none;"> a) CH₄
+                    </label>
+                    <label class="option" data-correct="False" data-qid="11">
+                        <input type="radio" name="q11" value="b" style="display: none;"> b) CO₂
+                    </label>
+                    <label class="option" data-correct="False" data-qid="11">
+                        <input type="radio" name="q11" value="c" style="display: none;"> c) H₂O
+                    </label>
+                    <label class="option" data-correct="False" data-qid="11">
+                        <input type="radio" name="q11" value="d" style="display: none;"> d) O₂
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(11)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback11"></div>
+            </div>
+
+            <!-- Pytanie 12 -->
+            <div class="question" id="q12">
+                <h3>12. Jakie wiązanie występuje w cząsteczce azotu (N₂)?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="12">
+                        <input type="radio" name="q12" value="a" style="display: none;"> a) Wiązanie potrójne
+                    </label>
+                    <label class="option" data-correct="False" data-qid="12">
+                        <input type="radio" name="q12" value="b" style="display: none;"> b) Wiązanie pojedyncze
+                    </label>
+                    <label class="option" data-correct="False" data-qid="12">
+                        <input type="radio" name="q12" value="c" style="display: none;"> c) Wiązanie podwójne
+                    </label>
+                    <label class="option" data-correct="False" data-qid="12">
+                        <input type="radio" name="q12" value="d" style="display: none;"> d) Wiązanie jonowe
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(12)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback12"></div>
+            </div>
+
+            <!-- Pytanie 13 -->
+            <div class="question" id="q13">
+                <h3>13. Która cząsteczka jest gazem szlachetnym?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="13">
+                        <input type="radio" name="q13" value="a" style="display: none;"> a) Neon (Ne)
+                    </label>
+                    <label class="option" data-correct="False" data-qid="13">
+                        <input type="radio" name="q13" value="b" style="display: none;"> b) Tlen (O₂)
+                    </label>
+                    <label class="option" data-correct="False" data-qid="13">
+                        <input type="radio" name="q13" value="c" style="display: none;"> c) Wodor (H₂)
+                    </label>
+                    <label class="option" data-correct="False" data-qid="13">
+                        <input type="radio" name="q13" value="d" style="display: none;"> d) Dwutlenek węgla (CO₂)
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(13)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback13"></div>
+            </div>
+
+            <!-- Pytanie 14 -->
+            <div class="question" id="q14">
+                <h3>14. Jaki jest wzór cząsteczki amoniaku?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="14">
+                        <input type="radio" name="q14" value="a" style="display: none;"> a) NH₃
+                    </label>
+                    <label class="option" data-correct="False" data-qid="14">
+                        <input type="radio" name="q14" value="b" style="display: none;"> b) CH₄
+                    </label>
+                    <label class="option" data-correct="False" data-qid="14">
+                        <input type="radio" name="q14" value="c" style="display: none;"> c) H₂O
+                    </label>
+                    <label class="option" data-correct="False" data-qid="14">
+                        <input type="radio" name="q14" value="d" style="display: none;"> d) CO₂
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(14)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback14"></div>
+            </div>
+
+            <!-- Pytanie 15 -->
+            <div class="question" id="q15">
+                <h3>15. Która cząsteczka ma ładunek elektryczny?</h3>
+                <div class="options">
+                    <label class="option" data-correct="False" data-qid="15">
+                        <input type="radio" name="q15" value="a" style="display: none;"> a) H₂O
+                    </label>
+                    <label class="option" data-correct="False" data-qid="15">
+                        <input type="radio" name="q15" value="b" style="display: none;"> b) CO₂
+                    </label>
+                    <label class="option" data-correct="True" data-qid="15">
+                        <input type="radio" name="q15" value="c" style="display: none;"> c) Jon amonowy (NH₄⁺)
+                    </label>
+                    <label class="option" data-correct="False" data-qid="15">
+                        <input type="radio" name="q15" value="d" style="display: none;"> d) O₂
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(15)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback15"></div>
+            </div>
+
+            <!-- Pytanie 16 -->
+            <div class="question" id="q16">
+                <h3>16. Jaki jest wzór cząsteczki tlenku węgla?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="16">
+                        <input type="radio" name="q16" value="a" style="display: none;"> a) CO
+                    </label>
+                    <label class="option" data-correct="False" data-qid="16">
+                        <input type="radio" name="q16" value="b" style="display: none;"> b) CO₂
+                    </label>
+                    <label class="option" data-correct="False" data-qid="16">
+                        <input type="radio" name="q16" value="c" style="display: none;"> c) CH₄
+                    </label>
+                    <label class="option" data-correct="False" data-qid="16">
+                        <input type="radio" name="q16" value="d" style="display: none;"> d) H₂O
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(16)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback16"></div>
+            </div>
+
+            <!-- Pytanie 17 -->
+            <div class="question" id="q17">
+                <h3>17. Która cząsteczka ma strukturę piramidalną?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="17">
+                        <input type="radio" name="q17" value="a" style="display: none;"> a) NH₃
+                    </label>
+                    <label class="option" data-correct="False" data-qid="17">
+                        <input type="radio" name="q17" value="b" style="display: none;"> b) CO₂
+                    </label>
+                    <label class="option" data-correct="False" data-qid="17">
+                        <input type="radio" name="q17" value="c" style="display: none;"> c) CH₄
+                    </label>
+                    <label class="option" data-correct="False" data-qid="17">
+                        <input type="radio" name="q17" value="d" style="display: none;"> d) O₂
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(17)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback17"></div>
+            </div>
+
+            <!-- Pytanie 18 -->
+            <div class="question" id="q18">
+                <h3>18. Jaki jest wzór cząsteczki etanu?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="18">
+                        <input type="radio" name="q18" value="a" style="display: none;"> a) C₂H₆
+                    </label>
+                    <label class="option" data-correct="False" data-qid="18">
+                        <input type="radio" name="q18" value="b" style="display: none;"> b) C₂H₄
+                    </label>
+                    <label class="option" data-correct="False" data-qid="18">
+                        <input type="radio" name="q18" value="c" style="display: none;"> c) CH₄
+                    </label>
+                    <label class="option" data-correct="False" data-qid="18">
+                        <input type="radio" name="q18" value="d" style="display: none;"> d) C₂H₂
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(18)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback18"></div>
+            </div>
+
+            <!-- Pytanie 19 -->
+            <div class="question" id="q19">
+                <h3>19. Która cząsteczka jest odpowiedzialna za efekt cieplarniany?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="19">
+                        <input type="radio" name="q19" value="a" style="display: none;"> a) CO₂
+                    </label>
+                    <label class="option" data-correct="False" data-qid="19">
+                        <input type="radio" name="q19" value="b" style="display: none;"> b) O₂
+                    </label>
+                    <label class="option" data-correct="False" data-qid="19">
+                        <input type="radio" name="q19" value="c" style="display: none;"> c) N₂
+                    </label>
+                    <label class="option" data-correct="False" data-qid="19">
+                        <input type="radio" name="q19" value="d" style="display: none;"> d) He
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(19)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback19"></div>
+            </div>
+
+            <!-- Pytanie 20 -->
+            <div class="question" id="q20">
+                <h3>20. Jaki jest kąt wiązania w cząsteczce metanu (CH₄)?</h3>
+                <div class="options">
+                    <label class="option" data-correct="True" data-qid="20">
+                        <input type="radio" name="q20" value="a" style="display: none;"> a) 109,5°
+                    </label>
+                    <label class="option" data-correct="False" data-qid="20">
+                        <input type="radio" name="q20" value="b" style="display: none;"> b) 90°
+                    </label>
+                    <label class="option" data-correct="False" data-qid="20">
+                        <input type="radio" name="q20" value="c" style="display: none;"> c) 120°
+                    </label>
+                    <label class="option" data-correct="False" data-qid="20">
+                        <input type="radio" name="q20" value="d" style="display: none;"> d) 180°
+                    </label>
+                </div>
+                <button type="button" onclick="checkAnswer(20)">Sprawdź odpowiedź</button>
+                <div class="feedback" id="feedback20"></div>
+            </div>
+        </form>
+        <button type="button" onclick="showResults()" style="display: none;" id="resultsBtn">Pokaż wyniki</button>
+    </div>
+
+    <script>
+        let score = 0;
+        let currentQ = 1;
+
+        function checkAnswer(qid) {
+            const question = document.getElementById('q' + qid);
+            const options = question.querySelectorAll('.option');
+            const feedback = document.getElementById('feedback' + qid);
+            const selected = question.querySelector('input:checked');
+
+            if (!selected) {
+                feedback.textContent = 'Wybierz opcję!';
+                feedback.className = 'feedback incorrect-feedback';
+                feedback.style.display = 'block';
+                return;
+            }
+
+            let isCorrect = false;
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+                const input = opt.querySelector('input');
+                if (input.checked) {
+                    const correct = opt.dataset.correct === 'True';
+                    if (correct) {
+                        opt.classList.add('correct');
+                        isCorrect = true;
+                        score++;
+                    } else {
+                        opt.classList.add('incorrect');
+                    }
+                } else if (opt.dataset.correct === 'True') {
+                    opt.classList.add('correct');
+                }
+            });
+
+            feedback.textContent = isCorrect ? 'Poprawna odpowiedź!' : 'Niestety, błędna. Spróbuj ponownie!';
+            feedback.className = 'feedback ' + (isCorrect ? 'correct-feedback' : 'incorrect-feedback');
+            feedback.style.display = 'block';
+
+            currentQ++;
+            updateProgress();
+
+            if (currentQ > 20) {
+                document.getElementById('resultsBtn').style.display = 'block';
+            }
+        }
+
+        function updateProgress() {
+            document.getElementById('progress').textContent = `Pytanie ${Math.min(currentQ, 21)} z 20`;
+        }
+
+        function showResults() {
+            alert(`Gratulacje! Twój wynik: ${score}/20 poprawnych odpowiedzi.`);
+        }
+    </script>
+</body>
+</html>
